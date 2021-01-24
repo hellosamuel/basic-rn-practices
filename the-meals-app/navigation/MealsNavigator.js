@@ -15,7 +15,7 @@ import FilterScreen from "../screens/FilterScreen"
 
 import Colors from "../constants/Colors"
 
-import { CATEGORIES, MEALS } from "../data/dummy-data"
+import { CATEGORIES } from "../data/dummy-data"
 import HeaderButton from "../components/HeaderButton"
 
 const defaultStackNavOptions = {
@@ -69,14 +69,13 @@ const MealsStackNavigator = () => {
         name="MealDetail"
         component={MealDetailScreen}
         options={({ route }) => {
-          const { mealId } = route.params
-          const selectedMeal = MEALS.find(meal => meal.id === mealId)
+          const { mealId, mealTitle, toggleFav, isFav } = route.params
 
           return {
-            headerTitle: selectedMeal.title,
+            headerTitle: mealTitle,
             headerRight: () => (
               <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item title="Favorite" iconName="ios-star" onPress={() => console.log("Mark as favorite!")} />
+                <Item title="Favorite" iconName={isFav ? "ios-star" : "ios-star-outline"} onPress={toggleFav} />
               </HeaderButtons>
             ),
           }
@@ -108,7 +107,22 @@ const FavoritesStackNavigator = () => {
           ),
         })}
       />
-      <FavoritesStack.Screen name="MealDetail" component={MealDetailScreen} />
+      <FavoritesStack.Screen
+        name="MealDetail"
+        component={MealDetailScreen}
+        options={({ route }) => {
+          const { mealId, mealTitle, toggleFav, isFav } = route.params
+
+          return {
+            headerTitle: mealTitle,
+            headerRight: () => (
+              <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                <Item title="Favorite" iconName={isFav ? "ios-star" : "ios-star-outline"} onPress={toggleFav} />
+              </HeaderButtons>
+            ),
+          }
+        }}
+      />
     </FavoritesStack.Navigator>
   )
 }
@@ -135,7 +149,7 @@ const FiltersStackNavigator = () => {
           ),
           headerRight: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
-              <Item title="Save" iconName="ios-save" onPress={route.params.save} />
+              <Item title="Save" iconName="ios-save" onPress={route.params?.save} />
             </HeaderButtons>
           ),
         })}
